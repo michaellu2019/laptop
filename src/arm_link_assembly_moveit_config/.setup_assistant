@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: arm_link_assembly_urdf
+    relative_path: urdf/arm_link_assembly_urdf.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/arm_link_assembly_urdf.srdf
+  CONFIG:
+    author_name: Michael Lu
+    author_email: mlu0708@mit.edu
+    generated_timestamp: 1658598505
