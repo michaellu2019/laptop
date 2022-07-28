@@ -33,12 +33,17 @@ class Arm {
     }
 
     move_servo(int id, int servo_value, int servo_speed) {
+      if (servo_value <= this->servo_low_vals[id] || servo_value >= this->servo_high_vals[id])
+        return;
+      
       servos[id].write(servo_value, servo_speed);
     }
 };
 
 int arm_servo_pins[][NUM_ARM_SERVOS] = {{0, 0, 0, 0, 0, 0}, {2, 3, 4, 5, 6, 7}};
-int arm_servo_neutral_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {90, 45, 90, 90, 90, 90}};
+int arm_servo_joint_state_offset_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {90, 135, 90, 0, 90, 90}};
+int arm_servo_joint_state_direction_vals[][NUM_ARM_SERVOS] = {{1, 1, 1, 1, 1, 1}, {-1, -1, 1, 1, 1, -1}};
+int arm_servo_neutral_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {90, 135, 90, 0, 90, 90}};
 int arm_servo_low_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {0, 7, 0, 0, 0, 0}};
 int arm_servo_high_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {180, 180, 180, 130, 180, 180}};
 Arm right_arm = Arm(arm_servo_pins[RIGHT_ARM], arm_servo_neutral_vals[RIGHT_ARM], arm_servo_low_vals[RIGHT_ARM], arm_servo_high_vals[RIGHT_ARM]);

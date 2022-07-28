@@ -1,2 +1,2 @@
 arm_link_assembly_moveit_config:arm_link_assembly_urdf:keyboard
--DCATKIN_DEVEL_PREFIX=/home/mlu/Documents/Programming/ROS/laptop/laptop_ws/devel -DCMAKE_INSTALL_PREFIX=/home/mlu/Documents/Programming/ROS/laptop/laptop_ws/install -G Unix Makefiles
+-DCATKIN_DEVEL_PREFIX=/home/mlu/Documents/Programming/ROS/laptop_ws/devel -DCMAKE_INSTALL_PREFIX=/home/mlu/Documents/Programming/ROS/laptop_ws/install -G Unix Makefiles
