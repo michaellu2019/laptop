@@ -1,8 +1,0 @@
-prefix=/home/mlu/Documents/Programming/ROS/laptop_ws/install
-
-Name: arm_link_assembly_urdf
-Description: Description of arm_link_assembly_urdf
-Version: 1.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
