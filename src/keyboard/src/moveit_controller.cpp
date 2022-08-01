@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
     // 2. Place the TCP (Tool Center Point, the tip of the robot) above the blue box
     geometry_msgs::PoseStamped home_pose;
     home_pose = move_group_interface_arm.getCurrentPose("link_6");
+    ROS_INFO_NAMED("tutorial", "Home Pose: %f %f %f", home_pose.pose.position.x, home_pose.pose.position.y, home_pose.pose.position.z);
 
     geometry_msgs::Pose target_pose1;
   
