@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   sensor_msgs
+  moveit_ros_planning_interface 
+  moveit_ros_move_group
 )
 
 ## System dependencies are found with CMake's conventions
@@ -122,8 +124,11 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(controller src/controller.cpp)
-target_link_libraries(controller ${catkin_LIBRARIES})
+add_executable(hardware_controller src/hardware_controller.cpp)
+target_link_libraries(hardware_controller ${catkin_LIBRARIES})
+
+add_executable(moveit_controller src/moveit_controller.cpp)
+target_link_libraries(moveit_controller ${catkin_LIBRARIES})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

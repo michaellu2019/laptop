@@ -132,8 +132,8 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/mlu/Documents/Programming/ROS/laptop_ws/build/gtest/cmake_install.cmake")
   include("/home/mlu/Documents/Programming/ROS/laptop_ws/build/arm_link_assembly_moveit_config/cmake_install.cmake")
-  include("/home/mlu/Documents/Programming/ROS/laptop_ws/build/keyboard/cmake_install.cmake")
   include("/home/mlu/Documents/Programming/ROS/laptop_ws/build/arm_link_assembly_urdf/cmake_install.cmake")
+  include("/home/mlu/Documents/Programming/ROS/laptop_ws/build/keyboard/cmake_install.cmake")
 
 endif()
 

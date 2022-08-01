@@ -10,7 +10,7 @@
 void servoControlSubscriberCallbackJointState(const sensor_msgs::JointState& msg) {
   for (int i = 0; i < NUM_ARM_SERVOS; i++) {
 //    TARGET_JOINT_POSITIONS[i] = msg.position[i];
-    right_arm.move_servo(i, msg.position[i] * arm_servo_joint_state_direction_vals[RIGHT_ARM][i] + arm_servo_joint_state_offset_vals[RIGHT_ARM][i], 30);
+    right_arm.move_servo(i, msg.position[i] * arm_servo_joint_state_coefficient_vals[RIGHT_ARM][i] + arm_servo_joint_state_offset_vals[RIGHT_ARM][i], 30);
   }
   // Call the method to write the joint positions to the servo motors
 //  writeServos();
