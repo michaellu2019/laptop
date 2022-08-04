@@ -13,7 +13,7 @@ sensor_msgs::JointState arm_state;
 
 void moveit_joint_states_callback(const sensor_msgs::JointState& moveit_joint_states) {
     for (int i = 0; i < NUM_JOINTS; i++) {
-        joint_states.position[i] = moveit_joint_states.position[i] * 180.0/M_PI;
+        joint_states.position[i] = moveit_joint_states.position[i] * 180.0/PI;
     }
 }
 

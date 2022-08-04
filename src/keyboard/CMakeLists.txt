@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   moveit_ros_planning_interface 
   moveit_ros_move_group
+  tf2
 )
 
 ## System dependencies are found with CMake's conventions
@@ -129,6 +130,9 @@ target_link_libraries(hardware_controller ${catkin_LIBRARIES})
 
 add_executable(moveit_controller src/moveit_controller.cpp)
 target_link_libraries(moveit_controller ${catkin_LIBRARIES})
+
+add_executable(moveit_demo src/moveit_demo.cpp)
+target_link_libraries(moveit_demo ${catkin_LIBRARIES})
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
