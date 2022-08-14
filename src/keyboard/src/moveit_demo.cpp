@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     // MoveIt operates on sets of joints called "planning groups" and stores them in an object called
     // the `JointModelGroup`. Throughout MoveIt the terms "planning group" and "joint model group"
     // are used interchangably.
-    static const std::string PLANNING_GROUP_ARM = "manipulator";
+    static const std::string PLANNING_GROUP_ARM = "left_arm_manipulator";
     // static const std::string PLANNING_GROUP_GRIPPER = "gripper";
     
     // The :planning_interface:`MoveGroupInterface` class can be easily
@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     moveit::planning_interface::MoveGroupInterface::Plan my_plan_arm;
     
     // 1. Move to home position
-    move_group_interface_arm.setJointValueTarget(move_group_interface_arm.getNamedTargetValues("home"));
+    move_group_interface_arm.setJointValueTarget(move_group_interface_arm.getNamedTargetValues("left_arm_home"));
     
     bool success = (move_group_interface_arm.plan(my_plan_arm) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     
     // 2. Place the TCP (Tool Center Point, the tip of the robot) above the blue box
     geometry_msgs::PoseStamped home_pose;
-    home_pose = move_group_interface_arm.getCurrentPose("link_6");
+    home_pose = move_group_interface_arm.getCurrentPose("endeffector_l1");
     ROS_INFO_NAMED("tutorial", "Home Pose: %f %f %f", home_pose.pose.position.x, home_pose.pose.position.y, home_pose.pose.position.z);
 
     geometry_msgs::Pose target_pose1;

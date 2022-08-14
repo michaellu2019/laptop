@@ -1,0 +1,12 @@
+left_arm_position_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    []
+  gains:
+    {}
+right_arm_position_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    []
+  gains:
+    {}

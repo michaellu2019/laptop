@@ -1,4 +1,6 @@
 # define NUM_ARM_SERVOS 6
+# define NUM_JOINTS_PER_ARM 7
+# define NUM_ARMS 2
 
 # define LEFT_ARM 0
 # define RIGHT_ARM 1
@@ -40,10 +42,10 @@ class Arm {
     }
 };
 
-int arm_servo_pins[][NUM_ARM_SERVOS] = {{0, 0, 0, 0, 0, 0}, {2, 3, 4, 5, 6, 7}};
-int arm_servo_joint_state_offset_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {90, 135, 90, 0, 90, 90}};
-float arm_servo_joint_state_coefficient_vals[][NUM_ARM_SERVOS] = {{1.0, 1.0, 1.0, 1.0, 1.0, 1.0}, {1.0, -1.0, -2.0/3.0, 1.0, -2.0/3.0, -1.0}};
-int arm_servo_neutral_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {90, 135, 90, 0, 90, 90}};
-int arm_servo_low_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {0, 7, 0, 0, 0, 0}};
-int arm_servo_high_vals[][NUM_ARM_SERVOS] = {{90, 90, 90, 90, 90, 90}, {180, 180, 180, 130, 180, 180}};
-Arm right_arm = Arm(arm_servo_pins[RIGHT_ARM], arm_servo_neutral_vals[RIGHT_ARM], arm_servo_low_vals[RIGHT_ARM], arm_servo_high_vals[RIGHT_ARM]);
+int arm_servo_pins[][NUM_ARM_SERVOS] = {{2, 3, 4, 5, 6, 7}, {0, 0, 0, 0, 0, 0}};
+int arm_servo_joint_state_offset_vals[][NUM_ARM_SERVOS] = {{90, 135, 90, 0, 90, 90}, {90, 90, 90, 90, 90, 90}};
+float arm_servo_joint_state_coefficient_vals[][NUM_ARM_SERVOS] = {{1.0, -1.0, -2.0/3.0, 1.0, -2.0/3.0, -1.0}, {1.0, 1.0, 1.0, 1.0, 1.0, 1.0}};
+int arm_servo_neutral_vals[][NUM_ARM_SERVOS] = {{90, 135, 90, 0, 90, 90}, {90, 90, 90, 90, 90, 90}};
+int arm_servo_low_vals[][NUM_ARM_SERVOS] = {{0, 7, 0, 0, 0, 0}, {90, 90, 90, 90, 90, 90}};
+int arm_servo_high_vals[][NUM_ARM_SERVOS] = {{180, 180, 180, 130, 180, 180}, {90, 90, 90, 90, 90, 90}};
+Arm left_arm = Arm(arm_servo_pins[LEFT_ARM], arm_servo_neutral_vals[LEFT_ARM], arm_servo_low_vals[LEFT_ARM], arm_servo_high_vals[LEFT_ARM]);

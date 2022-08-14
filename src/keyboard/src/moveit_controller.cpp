@@ -1,5 +1,8 @@
 #include "moveit/move_group_interface/move_group_interface.h"
 
+#include "std_msgs/Int32.h"
+#include "std_msgs/Int32MultiArray.h"
+
 #include "constants.h"
 #include "movement.h"
 
@@ -11,31 +14,45 @@ int main(int argc, char** argv) {
   ros::AsyncSpinner spinner(1);
   spinner.start();
 
-  static const std::string PLANNING_GROUP_ARM = "manipulator";
-  // static const std::string PLANNING_GROUP_GRIPPER = "gripper";
+  static const std::string PLANNING_GROUP_LAPTOP_SCREEN = "laptop_screen_manipulator";
+  static const std::string PLANNING_GROUP_LEFT_ARM = "left_arm_manipulator";
+  static const std::string PLANNING_GROUP_LEFT_ENDEFFECTOR = "left_arm_endeffector";
+  static const std::string PLANNING_GROUP_RIGHT_ARM = "right_arm_manipulator";
+  static const std::string PLANNING_GROUP_RIGHT_ENDEFFECTOR = "right_arm_endeffector";
   
-  moveit::planning_interface::MoveGroupInterface move_group_interface_arm(PLANNING_GROUP_ARM);
-  // moveit::planning_interface::MoveGroupInterface move_group_interface_gripper(PLANNING_GROUP_GRIPPER);
+  moveit::planning_interface::MoveGroupInterface laptop_screen_move_group_interface(PLANNING_GROUP_LAPTOP_SCREEN);
+  moveit::planning_interface::MoveGroupInterface left_arm_move_group_interface(PLANNING_GROUP_LEFT_ARM);
+  moveit::planning_interface::MoveGroupInterface left_endeffector_move_group_interface(PLANNING_GROUP_LEFT_ENDEFFECTOR);
+  moveit::planning_interface::MoveGroupInterface right_arm_move_group_interface(PLANNING_GROUP_RIGHT_ARM);
+  moveit::planning_interface::MoveGroupInterface right_endeffector_move_group_interface(PLANNING_GROUP_RIGHT_ENDEFFECTOR);
 
-  char initial_pose_name[100] = "home";
-  move_arm(&move_group_interface_arm, initial_pose_name);
+  char latop_screen_initial_pose_name[100] = "laptop_screen_home";
+  char left_arm_initial_pose_name[100] = "left_arm_home";
+  char right_arm_initial_pose_name[100] = "right_arm_home";
 
-  geometry_msgs::PoseStamped home_pose = move_group_interface_arm.getCurrentPose("link_6");
-  geometry_msgs::Vector3 home_orientation;
-  tf2::Quaternion home_quaternion(home_pose.pose.orientation.x, home_pose.pose.orientation.y, home_pose.pose.orientation.z, home_pose.pose.orientation.w);
-  tf2::Matrix3x3(home_quaternion).getRPY(home_orientation.x, home_orientation.y, home_orientation.z);
+  move_planning_group(&laptop_screen_move_group_interface, latop_screen_initial_pose_name);
+
+  ros::Duration(2).sleep();
+
+  move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
+  geometry_msgs::PoseStamped left_arm_home_pose = left_arm_move_group_interface.getCurrentPose("link_l6");
+  move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
+  geometry_msgs::PoseStamped right_arm_home_pose = right_arm_move_group_interface.getCurrentPose("link_r6");
+
+  geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_character('j', left_arm_home_pose);
+  move_planning_group(&left_arm_move_group_interface, target_pose1);
+  push_key(&left_endeffector_move_group_interface, LEFT);
 
   ros::Duration(3).sleep();
 
-  geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_character('j', home_pose);
-  move_arm(&move_group_interface_arm, target_pose1);
+  geometry_msgs::PoseStamped target_pose2 = get_pose_from_keyboard_character('k', left_arm_home_pose);
+  move_planning_group(&left_arm_move_group_interface, target_pose2);
+  push_key(&left_endeffector_move_group_interface, LEFT);
+
   ros::Duration(3).sleep();
 
-  geometry_msgs::PoseStamped target_pose2 = get_pose_from_keyboard_character('k', home_pose);
-  move_arm(&move_group_interface_arm, target_pose2);
-  ros::Duration(3).sleep();
-
-  move_arm(&move_group_interface_arm, initial_pose_name);
+  move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
+  move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
 
   ros::shutdown();
   return 0;

@@ -51,28 +51,36 @@ geometry_msgs::PoseStamped get_pose_from_keyboard_character(char c, geometry_msg
   return keyboard_character_pose;
 }
 
-void move_arm(moveit::planning_interface::MoveGroupInterface* move_group_interface_arm, char* target_pose_name) {
-  move_group_interface_arm->setJointValueTarget(move_group_interface_arm->getNamedTargetValues(target_pose_name));
+void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_group_interface, char* target_pose_name) {
+  move_group_interface->setJointValueTarget(move_group_interface->getNamedTargetValues(target_pose_name));
 
   moveit::planning_interface::MoveGroupInterface::Plan plan_arm;
-  bool success = (move_group_interface_arm->plan(plan_arm) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  bool success = (move_group_interface->plan(plan_arm) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
-  geometry_msgs::PoseStamped target_pose = move_group_interface_arm->getCurrentPose("link_6");
+  move_group_interface->move();
+
+  geometry_msgs::PoseStamped target_pose = move_group_interface->getCurrentPose("link_l6");
   ROS_INFO_NAMED("movement", "Moving arm to %s: %s", target_pose_name, success ? "" : "FAILED");
   log_pose(target_pose_name, target_pose.pose);
-
-  move_group_interface_arm->move();
 }
 
-void move_arm(moveit::planning_interface::MoveGroupInterface* move_group_interface_arm, geometry_msgs::PoseStamped target_pose) {
-  move_group_interface_arm->setPoseTarget(target_pose);
+void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped target_pose) {
+  move_group_interface->setPoseTarget(target_pose);
 
   moveit::planning_interface::MoveGroupInterface::Plan plan_arm;
-  bool success = (move_group_interface_arm->plan(plan_arm) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+  bool success = (move_group_interface->plan(plan_arm) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
 
   char target_pose_name[100] = "target_pose";
   ROS_INFO_NAMED("movement", "Moving arm to %s. %s", target_pose_name, success ? "" : "FAILED");
   log_pose(target_pose_name, target_pose.pose);
 
-  move_group_interface_arm->move();
+  move_group_interface->move();
+}
+
+void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interface, const char* side) {
+  char target_pose[100];
+  sprintf(target_pose, "%s_endeffector_open", side);
+  move_planning_group(move_group_interface, target_pose);
+  sprintf(target_pose, "%s_endeffector_closed", side);
+  move_planning_group(move_group_interface, target_pose);
 }

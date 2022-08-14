@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: laptop_stand_assembly_urdf
+    relative_path: urdf/laptop_stand_assembly_urdf.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/laptop_stand_assembly_urdf.srdf
+  CONFIG:
+    author_name: Michael Lu
+    author_email: mlu0708@mit.edu
+    generated_timestamp: 1660374635

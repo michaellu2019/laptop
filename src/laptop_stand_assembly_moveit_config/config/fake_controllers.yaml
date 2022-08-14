@@ -1,0 +1,38 @@
+controller_list:
+  - name: fake_left_arm_manipulator_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint_l1
+      - joint_l2
+      - joint_l3
+      - joint_l4
+      - joint_l5
+      - joint_l6
+  - name: fake_left_arm_endeffector_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint_l8
+  - name: fake_right_arm_manipulator_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint_r1
+      - joint_r2
+      - joint_r3
+      - joint_r4
+      - joint_r5
+      - joint_r6
+  - name: fake_right_arm_endeffector_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint_r8
+  - name: fake_laptop_screen_manipulator_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint_b1
+initial:  # Define initial robot poses per group
+  - group: left_arm_manipulator
+    pose: left_arm_neutral
+  - group: right_arm_manipulator
+    pose: right_arm_neutral
+  - group: laptop_screen_manipulator
+    pose: laptop_screen_neutral
