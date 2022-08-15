@@ -18,7 +18,7 @@ class Endeffector {
     Endeffector(int solenoid_pin, float trigger_val) {
       this->solenoid_pin = solenoid_pin;
       this->opened_time_ms = -1;
-      this->open_duration = 150;
+      this->open_duration = 200;
       this->close_duration = 1000;
       this->last_rising_value = -1.0;
       this->trigger_val = trigger_val;
@@ -41,7 +41,7 @@ class Endeffector {
       if (data > this->last_rising_value) {
         this->rising = true;
         this->last_rising_value = data;
-      } else if (this->rising && data < this->last_rising_value && data > this->trigger_val) {
+      } else if (this->rising && data < this->last_rising_value) {
         this->open();
       }
     }

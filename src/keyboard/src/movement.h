@@ -34,18 +34,18 @@ geometry_msgs::PoseStamped create_pose_stamped(float x, float y, float z, float 
   return target_pose;
 }
 
-geometry_msgs::PoseStamped get_pose_from_keyboard_character(char c, geometry_msgs::PoseStamped home_pose) {
+geometry_msgs::PoseStamped get_pose_from_keyboard_character(std::string c, geometry_msgs::PoseStamped home_pose, const char* side) {
   geometry_msgs::Vector3 home_orientation;
   tf2::Quaternion home_quaternion(home_pose.pose.orientation.x, home_pose.pose.orientation.y, home_pose.pose.orientation.z, home_pose.pose.orientation.w);
   tf2::Matrix3x3(home_quaternion).getRPY(home_orientation.x, home_orientation.y, home_orientation.z);
   
   geometry_msgs::PoseStamped keyboard_character_pose = create_pose_stamped(
-    home_pose.pose.position.x + keyboard_character_to_home_pose_offset[c].x, 
-    home_pose.pose.position.y + keyboard_character_to_home_pose_offset[c].y, 
-    home_pose.pose.position.z + keyboard_character_to_home_pose_offset[c].z,
-    home_orientation.x + keyboard_character_to_home_pose_offset[c].a, 
-    home_orientation.y + keyboard_character_to_home_pose_offset[c].b, 
-    home_orientation.z + keyboard_character_to_home_pose_offset[c].c
+    home_pose.pose.position.x + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].x, 
+    home_pose.pose.position.y + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].y, 
+    home_pose.pose.position.z + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].z,
+    home_orientation.x + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].a, 
+    home_orientation.y + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].b, 
+    home_orientation.z + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].c
   );
 
   return keyboard_character_pose;
@@ -78,6 +78,7 @@ void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_gr
 }
 
 void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interface, const char* side) {
+  return;
   char target_pose[100];
   sprintf(target_pose, "%s_endeffector_open", side);
   move_planning_group(move_group_interface, target_pose);
