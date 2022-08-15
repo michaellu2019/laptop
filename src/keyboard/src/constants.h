@@ -1,15 +1,15 @@
-#define PI 3.14159265358979323846
+# define PI 3.14159265358979323846
+
+# define NUM_ARM_SERVOS 6
+# define NUM_JOINTS_PER_ARM 7
+# define NUM_ARMS 2
 
 enum TeleopMode { FORWARD_KINEMATICS, INVERSE_KINEMATICS, CYLINDRICAL_KINEMATICS };
-
-const int NUM_JOINTS = 6;
-const int NUM_ARMS = 2;
 
 const char LEFT[100] = "left";
 const char RIGHT[100] = "right";
 
-const float INITIAL_JOINT_POS[NUM_JOINTS] = {0.0, 0.0, 180.0, 0.0, 0.0, 0.0};
-const float INITIAL_JOINT_ANGLES[NUM_JOINTS] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+const float INITIAL_JOINT_ANGLES[NUM_ARMS * NUM_JOINTS_PER_ARM] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 
 struct PoseOffset {
     float x;

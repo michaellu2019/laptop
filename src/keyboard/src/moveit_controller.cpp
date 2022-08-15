@@ -31,13 +31,16 @@ int main(int argc, char** argv) {
   char right_arm_initial_pose_name[100] = "right_arm_home";
 
   move_planning_group(&laptop_screen_move_group_interface, latop_screen_initial_pose_name);
+  push_key(&left_endeffector_move_group_interface, LEFT);
 
   ros::Duration(2).sleep();
 
   move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
+  push_key(&left_endeffector_move_group_interface, LEFT);
+
   geometry_msgs::PoseStamped left_arm_home_pose = left_arm_move_group_interface.getCurrentPose("link_l6");
-  move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
-  geometry_msgs::PoseStamped right_arm_home_pose = right_arm_move_group_interface.getCurrentPose("link_r6");
+  // move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
+  // geometry_msgs::PoseStamped right_arm_home_pose = right_arm_move_group_interface.getCurrentPose("link_r6");
 
   geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_character('j', left_arm_home_pose);
   move_planning_group(&left_arm_move_group_interface, target_pose1);
@@ -52,7 +55,10 @@ int main(int argc, char** argv) {
   ros::Duration(3).sleep();
 
   move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
-  move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
+  push_key(&left_endeffector_move_group_interface, LEFT);
+  // move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
+  
+  ros::Duration(3).sleep();
 
   ros::shutdown();
   return 0;
