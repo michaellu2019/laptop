@@ -34,21 +34,21 @@ geometry_msgs::PoseStamped create_pose_stamped(float x, float y, float z, float 
   return target_pose;
 }
 
-geometry_msgs::PoseStamped get_pose_from_keyboard_character(std::string c, geometry_msgs::PoseStamped home_pose, const char* side) {
+geometry_msgs::PoseStamped get_pose_from_keyboard_key(std::string c, geometry_msgs::PoseStamped home_pose, const char* side) {
   geometry_msgs::Vector3 home_orientation;
   tf2::Quaternion home_quaternion(home_pose.pose.orientation.x, home_pose.pose.orientation.y, home_pose.pose.orientation.z, home_pose.pose.orientation.w);
   tf2::Matrix3x3(home_quaternion).getRPY(home_orientation.x, home_orientation.y, home_orientation.z);
   
-  geometry_msgs::PoseStamped keyboard_character_pose = create_pose_stamped(
-    home_pose.pose.position.x + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].x, 
-    home_pose.pose.position.y + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].y, 
-    home_pose.pose.position.z + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].z,
-    home_orientation.x + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].a, 
-    home_orientation.y + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].b, 
-    home_orientation.z + keyboard_character_offset_scale * left_arm_keyboard_key_to_offset[c].c
+  geometry_msgs::PoseStamped keyboard_key_pose = create_pose_stamped(
+    home_pose.pose.position.x + keyboard_key_offset_position_scale * left_arm_keyboard_key_to_offset[c].x, 
+    home_pose.pose.position.y + keyboard_key_offset_position_scale * left_arm_keyboard_key_to_offset[c].y, 
+    home_pose.pose.position.z + keyboard_key_offset_position_scale * left_arm_keyboard_key_to_offset[c].z,
+    home_orientation.x + left_arm_keyboard_key_to_offset[c].a, 
+    home_orientation.y + left_arm_keyboard_key_to_offset[c].b, 
+    home_orientation.z + left_arm_keyboard_key_to_offset[c].c
   );
 
-  return keyboard_character_pose;
+  return keyboard_key_pose;
 }
 
 void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_group_interface, char* target_pose_name) {
@@ -84,4 +84,29 @@ void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interfa
   move_planning_group(move_group_interface, target_pose);
   sprintf(target_pose, "%s_endeffector_closed", side);
   move_planning_group(move_group_interface, target_pose);
+}
+
+void test_keys(moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped home_pose, const char* side) {
+  std::map<std::string, PoseOffset> keyboard_key_to_offset = left_arm_keyboard_key_to_offset;
+  if (side == RIGHT) {
+    keyboard_key_to_offset = right_arm_keyboard_key_to_offset;
+  }
+  
+  
+  int NUM_TESTS = left_arm_keyboard_key_to_offset.size();
+  std::map<std::string, PoseOffset>::iterator it;
+  int i = 0;
+
+  for (it = left_arm_keyboard_key_to_offset.begin(); it != left_arm_keyboard_key_to_offset.end(); it++) {
+    i++;
+    if (i > NUM_TESTS)
+      break;
+
+    std::string test_str = it->first;
+    ROS_INFO_NAMED("test", "Testing %s", test_str.c_str());
+    geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_key(it->first, home_pose, side);
+    move_planning_group(move_group_interface, target_pose1);
+    push_key(move_group_interface, LEFT);
+    ros::Duration(1).sleep();
+  }
 }

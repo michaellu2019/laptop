@@ -1,7 +1,7 @@
 #include "moveit/move_group_interface/move_group_interface.h"
-
 #include "std_msgs/Int32.h"
 #include "std_msgs/Int32MultiArray.h"
+#include "math.h"
 
 #include "constants.h"
 #include "movement.h"
@@ -44,36 +44,25 @@ int main(int argc, char** argv) {
   // move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
   // geometry_msgs::PoseStamped right_arm_home_pose = right_arm_move_group_interface.getCurrentPose("link_r6");
 
-  int NUM_TESTS = left_arm_keyboard_key_to_offset.size();
-  std::map<std::string, PoseOffset>::iterator it;
-  int i = 0;
+  // test_keys(&left_arm_move_group_interface, left_arm_home_pose, LEFT);
 
-  for (it = left_arm_keyboard_key_to_offset.begin(); it != left_arm_keyboard_key_to_offset.end(); it++) {
-    i++;
-    if (i > NUM_TESTS)
-      break;
+  geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_key("power", left_arm_home_pose, LEFT);
+  move_planning_group(&left_arm_move_group_interface, target_pose1);
+  push_key(&left_endeffector_move_group_interface, LEFT);
 
-    std::string test_str = it->first;
-    ROS_INFO_NAMED("test", "Testing %s", test_str.c_str());
-    geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_character(it->first, left_arm_home_pose, LEFT);
-    move_planning_group(&left_arm_move_group_interface, target_pose1);
-    push_key(&left_endeffector_move_group_interface, LEFT);
-    ros::Duration(1).sleep();
-  }
-  for (int i = 0; i < NUM_TESTS; i++) {
-  }
+  ros::Duration(1).sleep();
 
-  // geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_character('j', left_arm_home_pose);
-  // move_planning_group(&left_arm_move_group_interface, target_pose1);
-  // push_key(&left_endeffector_move_group_interface, LEFT);
+  geometry_msgs::PoseStamped target_pose2 = get_pose_from_keyboard_key("right_arrow", left_arm_home_pose, LEFT);
+  move_planning_group(&left_arm_move_group_interface, target_pose2);
+  push_key(&left_endeffector_move_group_interface, LEFT);
 
-  // ros::Duration(3).sleep();
+  ros::Duration(1).sleep();
 
-  // geometry_msgs::PoseStamped target_pose2 = get_pose_from_keyboard_character('k', left_arm_home_pose);
-  // move_planning_group(&left_arm_move_group_interface, target_pose2);
-  // push_key(&left_endeffector_move_group_interface, LEFT);
+  geometry_msgs::PoseStamped target_pose3 = get_pose_from_keyboard_key("enter", left_arm_home_pose, LEFT);
+  move_planning_group(&left_arm_move_group_interface, target_pose3);
+  push_key(&left_endeffector_move_group_interface, LEFT);
 
-  // ros::Duration(3).sleep();
+  ros::Duration(1).sleep();
 
   move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
   push_key(&left_endeffector_move_group_interface, LEFT);
