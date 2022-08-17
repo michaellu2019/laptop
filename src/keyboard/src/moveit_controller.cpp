@@ -46,29 +46,30 @@ int main(int argc, char** argv) {
 
   // test_keys(&left_arm_move_group_interface, left_arm_home_pose, LEFT);
 
-  geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_key("power", left_arm_home_pose, LEFT);
-  move_planning_group(&left_arm_move_group_interface, target_pose1);
-  push_key(&left_endeffector_move_group_interface, LEFT);
+  // std::vector<std::string> key_set = {"h", "i"};
+  // std::vector<std::string> key_set = {"power", "j", "enter"};
+  std::vector<std::string> key_set = {"power", "right_arrow", "enter"};
+  // std::vector<std::string> key_set = {"l", "o", "l"};
 
-  ros::Duration(1).sleep();
+  for (int i = 0; i < key_set.size(); i++) {
+    std::string key = key_set[i];
+    ROS_INFO_NAMED("test", "Pushing %s", key.c_str());
 
-  geometry_msgs::PoseStamped target_pose2 = get_pose_from_keyboard_key("right_arrow", left_arm_home_pose, LEFT);
-  move_planning_group(&left_arm_move_group_interface, target_pose2);
-  push_key(&left_endeffector_move_group_interface, LEFT);
+    geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_key(key, left_arm_home_pose, LEFT);
+    move_planning_group(&left_arm_move_group_interface, target_pose1);
 
-  ros::Duration(1).sleep();
-
-  geometry_msgs::PoseStamped target_pose3 = get_pose_from_keyboard_key("enter", left_arm_home_pose, LEFT);
-  move_planning_group(&left_arm_move_group_interface, target_pose3);
-  push_key(&left_endeffector_move_group_interface, LEFT);
-
-  ros::Duration(1).sleep();
+    if (key == "right_arrow") {
+      push_key(&left_endeffector_move_group_interface, LEFT);
+    }
+    push_key(&left_endeffector_move_group_interface, LEFT);
+    // ros::Duration(1).sleep();
+  }
 
   move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
-  push_key(&left_endeffector_move_group_interface, LEFT);
+  // push_key(&left_endeffector_move_group_interface, LEFT);
   // move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
   
-  ros::Duration(3).sleep();
+  ros::Duration(1).sleep();
 
   ros::shutdown();
   return 0;

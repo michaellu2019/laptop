@@ -78,7 +78,6 @@ void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_gr
 }
 
 void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interface, const char* side) {
-  return;
   char target_pose[100];
   sprintf(target_pose, "%s_endeffector_open", side);
   move_planning_group(move_group_interface, target_pose);

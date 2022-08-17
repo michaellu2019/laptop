@@ -25,10 +25,11 @@ struct PoseOffset {
 const float keyboard_key_offset_position_scale = 0.01;
 const float keyboard_key_offset_orientation_scales[NUM_KEYBOARD_ROWS] = {-0.25, -0.1, 0.0, 0.0, 0.0, 0.0};
 const float keyboard_key_row_offsets[NUM_KEYBOARD_ROWS] = {6.0, 4.7, 3.6, 2.0, 0.2, -1.6};
-const float left_arm_keyboard_key_column_start_offsets[NUM_KEYBOARD_ROWS] = {-3.4, -4.0, -5.6, -5.4, -4.1, 0.1};
+const float left_arm_keyboard_key_column_start_offsets[NUM_KEYBOARD_ROWS] = {-3.4, -4.0, -5.6, -5.4, -4.5, 0.1};
 const float left_arm_keyboard_key_column_spacing[NUM_KEYBOARD_ROWS] = {1.9, 1.9, 1.9, 1.9, 1.9, 1.9};
-const float left_arm_keyboard_key_press_height_offsets[NUM_KEYBOARD_ROWS] = {-0.2, 0.2, -0.5, -0.8, -0.8, -0.9};
-const float left_arm_keyboard_key_sag_compensation[NUM_KEYBOARD_ROWS] = {-0.08, -0.14, -0.14, -0.2, -0.25, -0.2};
+// const float left_arm_keyboard_key_press_height_offsets[NUM_KEYBOARD_ROWS] = {-0.2, 0.2, -0.5, -0.8, -0.8, -1.2};
+const float left_arm_keyboard_key_press_height_offsets[NUM_KEYBOARD_ROWS] = {0.7, 1.3, 0.6, 0.4, 0.3, -0.1};
+const float left_arm_keyboard_key_sag_compensation[NUM_KEYBOARD_ROWS] = {-0.08, -0.14, -0.14, -0.2, -0.25, -0.15};
 
 PoseOffset test_pose_offset = {0.0, 0.0, 0.0, 0.0, 0.5, 0.0};
 

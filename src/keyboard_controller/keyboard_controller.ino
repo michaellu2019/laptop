@@ -38,12 +38,10 @@ void setup() {
 
   left_arm.initialize(30, 100);
   left_endeffector.initialize();
-  left_endeffector.open();
+//  left_endeffector.open();
 }
 
 void loop() {
-  left_endeffector.tick();
-  
   node_handle.spinOnce();
   delay(1);
 }
