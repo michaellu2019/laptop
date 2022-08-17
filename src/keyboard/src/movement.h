@@ -77,12 +77,15 @@ void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_gr
   move_group_interface->move();
 }
 
-void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interface, const char* side) {
+void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interface, ros::Publisher* endeffector_states_pub, const char* side) {
   char target_pose[100];
   sprintf(target_pose, "%s_endeffector_open", side);
-  move_planning_group(move_group_interface, target_pose);
-  sprintf(target_pose, "%s_endeffector_closed", side);
-  move_planning_group(move_group_interface, target_pose);
+  int i = side == RIGHT;
+  endeffector_states.data = side == RIGHT;
+  endeffector_states_pub->publish(endeffector_states);
+  // move_planning_group(move_group_interface, target_pose);
+  // sprintf(target_pose, "%s_endeffector_closed", side);
+  // move_planning_group(move_group_interface, target_pose);
 }
 
 void test_keys(moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped home_pose, const char* side) {
@@ -105,7 +108,7 @@ void test_keys(moveit::planning_interface::MoveGroupInterface* move_group_interf
     ROS_INFO_NAMED("test", "Testing %s", test_str.c_str());
     geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_key(it->first, home_pose, side);
     move_planning_group(move_group_interface, target_pose1);
-    push_key(move_group_interface, LEFT);
+    // push_key(move_group_interface, LEFT);
     ros::Duration(1).sleep();
   }
 }

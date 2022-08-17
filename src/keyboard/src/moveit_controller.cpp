@@ -1,4 +1,5 @@
 #include "moveit/move_group_interface/move_group_interface.h"
+#include "std_msgs/Int8.h"
 #include "std_msgs/Int32.h"
 #include "std_msgs/Int32MultiArray.h"
 #include "math.h"
@@ -10,6 +11,8 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "moveit_controller");
 
   ros::NodeHandle n;
+
+  ros::Publisher endeffector_states_pub = n.advertise<std_msgs::Int8>("endeffector_states", 1000);
 
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -38,7 +41,7 @@ int main(int argc, char** argv) {
   // ros::Duration(2).sleep();
 
   move_planning_group(&left_arm_move_group_interface, left_arm_initial_pose_name);
-  push_key(&left_endeffector_move_group_interface, LEFT);
+  push_key(&left_endeffector_move_group_interface, &endeffector_states_pub, LEFT);
 
   geometry_msgs::PoseStamped left_arm_home_pose = left_arm_move_group_interface.getCurrentPose("link_l6");
   // move_planning_group(&right_arm_move_group_interface, right_arm_initial_pose_name);
@@ -48,8 +51,9 @@ int main(int argc, char** argv) {
 
   // std::vector<std::string> key_set = {"h", "i"};
   // std::vector<std::string> key_set = {"power", "j", "enter"};
-  std::vector<std::string> key_set = {"power", "right_arrow", "enter"};
+  // std::vector<std::string> key_set = {"power", "right_arrow", "enter"};
   // std::vector<std::string> key_set = {"l", "o", "l"};
+  std::vector<std::string> key_set = {"l", "o", "l", "space", "h", "i"};
 
   for (int i = 0; i < key_set.size(); i++) {
     std::string key = key_set[i];
@@ -59,9 +63,9 @@ int main(int argc, char** argv) {
     move_planning_group(&left_arm_move_group_interface, target_pose1);
 
     if (key == "right_arrow") {
-      push_key(&left_endeffector_move_group_interface, LEFT);
+      push_key(&left_endeffector_move_group_interface, &endeffector_states_pub, LEFT);
     }
-    push_key(&left_endeffector_move_group_interface, LEFT);
+    push_key(&left_endeffector_move_group_interface, &endeffector_states_pub, LEFT);
     // ros::Duration(1).sleep();
   }
 

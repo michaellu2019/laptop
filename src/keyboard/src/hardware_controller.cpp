@@ -2,6 +2,7 @@
 #include "std_msgs/String.h"
 #include "std_msgs/Float32.h"
 #include "std_msgs/Float32MultiArray.h"
+#include "std_msgs/Int8.h"
 #include "sensor_msgs/JointState.h"
 #include "sstream"
 #include "math.h"
@@ -10,6 +11,9 @@
 
 sensor_msgs::JointState joint_states;
 std_msgs::Float32MultiArray controller_joint_states;
+std_msgs::Int8 controller_endeffector_states;
+
+ros::Publisher controller_endeffector_states_pub;
 
 void moveit_joint_states_callback(const sensor_msgs::JointState& moveit_joint_states) {
     for (int i = 0; i < NUM_ARMS * NUM_JOINTS_PER_ARM; i++) {
@@ -21,13 +25,22 @@ void moveit_joint_states_callback(const sensor_msgs::JointState& moveit_joint_st
     }
 }
 
+void moveit_endeffector_states_callback(const std_msgs::Int8& moveit_endeffector_states) {
+    controller_endeffector_states.data = moveit_endeffector_states.data;
+    controller_endeffector_states_pub.publish(controller_endeffector_states);
+}
+
 int main(int argc, char **argv) {
     ros::init(argc, argv, "hardware_controller");
 
     ros::NodeHandle n;
 
-    ros::Publisher controller_joint_states_pub = n.advertise<std_msgs::Float32MultiArray>("controller_joint_states", 1000);
     ros::Subscriber moveit_joint_states_sub = n.subscribe("joint_states", 1000, moveit_joint_states_callback);
+    ros::Subscriber moveit_endeffector_states_sub = n.subscribe("endeffector_states", 1000, moveit_endeffector_states_callback);
+
+    ros::Publisher controller_joint_states_pub = n.advertise<std_msgs::Float32MultiArray>("controller_joint_states", 1000);
+    controller_endeffector_states_pub = n.advertise<std_msgs::Int8>("controller_endeffector_states", 1000);
+    
 
     ros::Rate loop_rate(30);
 
@@ -48,6 +61,7 @@ int main(int argc, char **argv) {
 
     while (ros::ok()) {
         controller_joint_states_pub.publish(controller_joint_states);
+
         ros::spinOnce();
 
         loop_rate.sleep();

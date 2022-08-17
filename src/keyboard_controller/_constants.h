@@ -18,14 +18,32 @@ class Endeffector {
     Endeffector(int solenoid_pin, float trigger_val) {
       this->solenoid_pin = solenoid_pin;
       this->t = 0;
-      this->open_duration = 5;
-      this->close_duration = 50;
+      this->open_duration = 100;
+      this->close_duration = 500;
       this->trigger_val = trigger_val;
       this->trigger_state = READY;
     }
 
     initialize() {
       pinMode(this->solenoid_pin, OUTPUT);
+    }
+
+    open() {
+      if (this->trigger_state == READY) {
+        digitalWrite(this->solenoid_pin, HIGH);
+        this->t = 0;
+        this->trigger_state = OPEN;
+      }
+    }
+
+    tick() {
+      this->t++;
+      if (this->trigger_state == OPEN && this->t > this->open_duration) {
+        digitalWrite(this->solenoid_pin, LOW);
+        this->trigger_state = CLOSED;
+      } else if (this->trigger_state == CLOSED && this->t > this->close_duration + this->open_duration) {
+        this->trigger_state = READY;
+      }
     }
 
     handle_pose_data(float data) {
