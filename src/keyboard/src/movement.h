@@ -51,7 +51,13 @@ geometry_msgs::PoseStamped get_pose_from_keyboard_key(std::string c, geometry_ms
   return keyboard_key_pose;
 }
 
-void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_group_interface, char* target_pose_name) {
+void trigger_joint_publisher(ros::Publisher* joint_triggers_pub, const char* side) {
+  int i = side == RIGHT;
+  joint_triggers.data = side == RIGHT;
+  joint_triggers_pub->publish(joint_triggers);
+}
+
+void move_planning_group(ros::Publisher* joint_triggers_pub, moveit::planning_interface::MoveGroupInterface* move_group_interface, char* target_pose_name) {
   move_group_interface->setJointValueTarget(move_group_interface->getNamedTargetValues(target_pose_name));
 
   moveit::planning_interface::MoveGroupInterface::Plan plan_arm;
@@ -62,9 +68,11 @@ void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_gr
   geometry_msgs::PoseStamped target_pose = move_group_interface->getCurrentPose("link_l6");
   ROS_INFO_NAMED("movement", "Moving arm to %s: %s", target_pose_name, success ? "" : "FAILED");
   log_pose(target_pose_name, target_pose.pose);
+
+  trigger_joint_publisher(joint_triggers_pub, move_group_interface->getName() == PLANNING_GROUP_LEFT_ARM ? LEFT : RIGHT);
 }
 
-void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped target_pose) {
+void move_planning_group(ros::Publisher* joints_trigger_pub, moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped target_pose) {
   move_group_interface->setPoseTarget(target_pose);
 
   moveit::planning_interface::MoveGroupInterface::Plan plan_arm;
@@ -75,20 +83,22 @@ void move_planning_group(moveit::planning_interface::MoveGroupInterface* move_gr
   log_pose(target_pose_name, target_pose.pose);
 
   move_group_interface->move();
+
+  trigger_joint_publisher(joints_trigger_pub, move_group_interface->getName() == PLANNING_GROUP_LEFT_ARM ? LEFT : RIGHT);
 }
 
-void push_key(moveit::planning_interface::MoveGroupInterface* move_group_interface, ros::Publisher* endeffector_states_pub, const char* side) {
+void push_key(ros::Publisher* endeffector_triggers_pub, moveit::planning_interface::MoveGroupInterface* move_group_interface, const char* side) {
   char target_pose[100];
   sprintf(target_pose, "%s_endeffector_open", side);
   int i = side == RIGHT;
-  endeffector_states.data = side == RIGHT;
-  endeffector_states_pub->publish(endeffector_states);
+  endeffector_triggers.data = side == RIGHT;
+  endeffector_triggers_pub->publish(endeffector_triggers);
   // move_planning_group(move_group_interface, target_pose);
   // sprintf(target_pose, "%s_endeffector_closed", side);
   // move_planning_group(move_group_interface, target_pose);
 }
 
-void test_keys(moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped home_pose, const char* side) {
+void test_keys(ros::Publisher* joint_triggers_pub, ros::Publisher* endeffector_triggers_pub, moveit::planning_interface::MoveGroupInterface* move_group_interface, geometry_msgs::PoseStamped home_pose, const char* side) {
   std::map<std::string, PoseOffset> keyboard_key_to_offset = left_arm_keyboard_key_to_offset;
   if (side == RIGHT) {
     keyboard_key_to_offset = right_arm_keyboard_key_to_offset;
@@ -107,8 +117,8 @@ void test_keys(moveit::planning_interface::MoveGroupInterface* move_group_interf
     std::string test_str = it->first;
     ROS_INFO_NAMED("test", "Testing %s", test_str.c_str());
     geometry_msgs::PoseStamped target_pose1 = get_pose_from_keyboard_key(it->first, home_pose, side);
-    move_planning_group(move_group_interface, target_pose1);
-    // push_key(move_group_interface, LEFT);
+    move_planning_group(joint_triggers_pub, move_group_interface, target_pose1);
+    push_key(endeffector_triggers_pub, move_group_interface, LEFT);
     ros::Duration(1).sleep();
   }
 }

@@ -8,12 +8,15 @@
 
 # define NUM_KEYBOARD_ROWS 6
 
-enum TeleopMode { FORWARD_KINEMATICS, INVERSE_KINEMATICS, CYLINDRICAL_KINEMATICS };
-
 const char LEFT[100] = "left";
 const char RIGHT[100] = "right";
 
-const float INITIAL_JOINT_ANGLES[NUM_ARMS * NUM_JOINTS_PER_ARM] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+const char JOINT_STATES_TOPIC[100] = "joint_states";
+const char JOINT_TRIGGERS_TOPIC[100] = "joint_triggers";
+const char ENDEFFECTOR_TRIGGERS_TOPIC[100] = "endeffector_triggers";
+const char CONTROLLER_JOINT_STATES_TOPIC[100] = "controller_joint_states";
+const char CONTROLLER_JOINT_TRIGGERS_TOPIC[100] = "controller_joint_triggers";
+const char CONTROLLER_ENDEFFECTOR_TRIGGERS_TOPIC[100] = "controller_endeffector_triggers";
 
 struct PoseOffset {
     float x;
@@ -65,4 +68,15 @@ void setup_keyboard_key_to_offset_map() {
     }
 }
 
-std_msgs::Int8 endeffector_states;
+std_msgs::Int8 endeffector_triggers;
+std_msgs::Int8 joint_triggers;
+
+static const std::string PLANNING_GROUP_LAPTOP_SCREEN = "laptop_screen_manipulator";
+static const std::string PLANNING_GROUP_LEFT_ARM = "left_arm_manipulator";
+static const std::string PLANNING_GROUP_LEFT_ENDEFFECTOR = "left_arm_endeffector";
+static const std::string PLANNING_GROUP_RIGHT_ARM = "right_arm_manipulator";
+static const std::string PLANNING_GROUP_RIGHT_ENDEFFECTOR = "right_arm_endeffector";
+
+char latop_screen_initial_pose_name[100] = "laptop_screen_home";
+char left_arm_initial_pose_name[100] = "left_arm_home";
+char right_arm_initial_pose_name[100] = "right_arm_home";
